@@ -45,6 +45,13 @@ def unescape_templatetags_preprocessor(template_content):
     return template_content
 
 def xmlfor_preprocessor(template_content):
+    for include_text in re.findall(r'{%(.+?)%}', template_content):
+        new_include_text = re.sub(r'<.*?>', '', include_text)
+        template_content = template_content.replace(
+            '{%%%s%%}' % include_text, '{%%%s%%}' % new_include_text
+        )
+        print include_text
+        print template_content
     tree = etree.parse(StringIO(template_content))
 
     # 1. search for xmlfor pairs
